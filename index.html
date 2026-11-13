@@ -1,4 +1,128 @@
-<body bgcolor="yellow">
-<h1><p align="center">SELAMAT DATANG DI APLIKASI INVENTARIS SMK SWASTA ISTIQLAL DELITUA</p></h1>
-<p align="center"><a href="labtrack_ti_sistem_manajemen_peminjaman_alat_bengkel_ti.html">Masuk<a/></p>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Datang - Aplikasi Inventaris</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            padding: 60px 35px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .icon {
+            font-size: 65px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #164e63;
+            font-size: 32px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: 17px;
+            line-height: 1.7;
+            margin-bottom: 35px;
+        }
+
+        .btn-masuk {
+            display: inline-block;
+            padding: 15px 45px;
+            background: #087f8c;
+            color: white;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(8, 127, 140, 0.3);
+        }
+
+        .btn-masuk:hover {
+            background: #065a65;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(8, 127, 140, 0.4);
+        }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="icon">🏫</div>
+
+        <h1>
+            SELAMAT DATANG DI APLIKASI INVENTARIS
+            SMK SWASTA ISTIQLAL DELITUA
+        </h1>
+
+        <p class="subtitle">
+            Sistem Informasi Inventaris Sekolah<br>
+            Memudahkan pengelolaan data barang,
+            peminjaman, dan pengembalian inventaris sekolah
+            secara efektif dan terorganisir.
+        </p>
+
+        <a href="demo_labti_peminjaman.html" class="btn-masuk">
+            MASUK →
+        </a>
+
+        <footer>
+            &copy; 2026 SMK SWASTA ISTIQLAL DELITUA.
+            Semua Hak Dilindungi.
+        </footer>
+
+    </div>
+
 </body>
+</html>

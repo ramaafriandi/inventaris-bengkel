@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LabTI — Sistem Peminjaman Alat</title>
+<style>
+:root{--navy:#172554;--blue:#2563eb;--pale:#eff6ff;--ink:#172033;--muted:#64748b;--line:#e2e8f0;--bg:#f6f8fc;--green:#15803d;--red:#b91c1c;--amber:#b45309}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--navy);color:white;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.brand{font-size:19px;font-weight:800;letter-spacing:.2px}.brand small{display:block;font-size:11px;font-weight:500;color:#c7d2fe;letter-spacing:1.2px}
+header span{font-size:12px;color:#dbeafe}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 66px)}
+aside{background:white;border-right:1px solid var(--line);padding:22px 14px}
+.nav{display:block;width:100%;text-align:left;border:0;background:transparent;padding:11px 13px;border-radius:9px;margin:3px 0;color:#475569;font-weight:600;cursor:pointer}
+.nav.active,.nav:hover{background:var(--pale);color:var(--blue)}
+main{padding:26px;max-width:1400px;width:100%;margin:auto}
+h1{font-size:24px;margin:0 0 4px} .sub{color:var(--muted);margin:0 0 22px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.stat,.panel{background:white;border:1px solid var(--line);border-radius:13px;padding:17px}
+.stat .label{color:var(--muted);font-size:12px}.stat strong{font-size:28px;display:block;margin-top:4px}
+.stat em{font-style:normal;font-size:11px;color:var(--muted)}
+.panel{margin:15px 0}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.panel h2{font-size:16px;margin:0}
+button,.btn{border:0;border-radius:8px;background:var(--blue);color:white;padding:9px 13px;font-weight:650;cursor:pointer}
+button.secondary{background:#eaf0fb;color:var(--navy)}button.danger{background:#fee2e2;color:var(--red)}
+button:disabled{opacity:.45;cursor:not-allowed}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line);vertical-align:middle}th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);background:#f8fafc}
+td{font-size:13px}.tag{display:inline-block;border-radius:99px;padding:3px 8px;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:var(--green)}.warn{background:#fef3c7;color:var(--amber)}.bad{background:#fee2e2;color:var(--red)}
+input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font:inherit;background:white;color:var(--ink)}
+label{display:block;font-size:12px;font-weight:700;color:#475569;margin:0 0 5px}.field{margin-bottom:13px}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.toolbar input{max-width:280px}
+.hidden{display:none!important}.muted{color:var(--muted)}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{padding:6px 9px;font-size:11px}
+.empty{text-align:center;color:var(--muted);padding:24px}.notice{padding:11px 13px;background:#eff6ff;color:#1e40af;border-radius:9px;margin:12px 0;font-size:12px}
+.modal{position:fixed;inset:0;background:#0f172a88;display:grid;place-items:center;padding:18px;z-index:5}.dialog{background:white;border-radius:14px;padding:22px;width:min(520px,100%);max-height:90vh;overflow:auto}.dialog h2{margin:0 0 15px;font-size:18px}.dialogfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+footer{color:var(--muted);font-size:11px;padding:15px 0;text-align:center}
+@media(max-width:800px){.layout{grid-template-columns:1fr}aside{display:flex;overflow:auto;padding:8px;border-right:0;border-bottom:1px solid var(--line)}.nav{white-space:nowrap;width:auto}.stats{grid-template-columns:repeat(2,1fr)}main{padding:16px}header{padding:14px 17px}}
+@media(max-width:520px){.stats{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.tablewrap{overflow:auto}table{min-width:650px}}
+@media print{header,aside,.no-print,footer{display:none!important}.layout{display:block}main{padding:0}.panel,.stat{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="brand">LabTI <small>SISTEM INVENTARIS & PEMINJAMAN</small></div><span>Demo aplikasi bengkel TI</span></header>
+<div class="layout">
+<aside class="no-print">
+<button class="nav active" data-page="dashboard">▦ &nbsp; Dashboard</button>
+<button class="nav" data-page="alat">▣ &nbsp; Data Alat</button>
+<button class="nav" data-page="peminjaman">⇄ &nbsp; Peminjaman</button>
+<button class="nav" data-page="riwayat">☷ &nbsp; Riwayat Transaksi</button>
+</aside>
+<main>
+<section id="dashboard" class="page">
+<h1>Dashboard</h1><p class="sub">Ringkasan kondisi inventaris bengkel TI.</p>
+<div class="stats">
+<div class="stat"><span class="label">Total jenis alat</span><strong id="s-total">0</strong><em>Item inventaris</em></div>
+<div class="stat"><span class="label">Unit tersedia</span><strong id="s-ready">0</strong><em>Siap dipinjam</em></div>
+<div class="stat"><span class="label">Sedang dipinjam</span><strong id="s-loan">0</strong><em>Belum dikembalikan</em></div>
+<div class="stat"><span class="label">Terlambat</span><strong id="s-late">0</strong><em>Perlu ditindaklanjuti</em></div>
+</div>
+<div class="panel"><div class="panel-head"><h2>Perlu perhatian</h2><button class="secondary no-print" onclick="go('peminjaman')">Lihat peminjaman</button></div><div class="tablewrap"><table><thead><tr><th>Peminjam</th><th>Alat</th><th>Tanggal kembali</th><th>Status</th></tr></thead><tbody id="attention"></tbody></table></div></div>
+<div class="notice">Data demo tersimpan di browser perangkat ini (localStorage). Gunakan menu Data Alat untuk mengelola inventaris dan menu Peminjaman untuk mencatat transaksi.</div>
+</section>
+<section id="alat" class="page hidden">
+<h1>Data Alat</h1><p class="sub">Kelola kode, nama, jumlah, dan kondisi alat bengkel.</p>
+<div class="panel"><div class="panel-head"><h2>Daftar inventaris</h2><div class="toolbar no-print"><input id="toolSearch" placeholder="Cari kode atau nama..." oninput="renderTools()"><button onclick="openTool()">+ Tambah alat</button><button class="secondary" onclick="window.print()">Cetak</button></div></div>
+<div class="tablewrap"><table><thead><tr><th>Kode</th><th>Nama alat</th><th>Total unit</th><th>Tersedia</th><th>Dipinjam</th><th>Aksi</th></tr></thead><tbody id="toolsBody"></tbody></table></div></div>
+</section>
+<section id="peminjaman" class="page hidden">
+<h1>Peminjaman</h1><p class="sub">Catat peminjaman dan proses pengembalian alat.</p>
+<div class="panel"><div class="panel-head"><h2>Transaksi aktif</h2><div class="toolbar no-print"><input id="loanSearch" placeholder="Cari nama atau alat..." oninput="renderLoans()"><button onclick="openLoan()">+ Catat peminjaman</button></div></div>
+<div class="tablewrap"><table><thead><tr><th>Peminjam</th><th>Alat</th><th>Jumlah</th><th>Tgl pinjam</th><th>Batas kembali</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="loansBody"></tbody></table></div></div>
+</section>
+<section id="riwayat" class="page hidden">
+<h1>Riwayat Transaksi</h1><p class="sub">Daftar seluruh peminjaman, termasuk transaksi yang sudah dikembalikan.</p>
+<div class="panel"><div class="panel-head"><h2>Semua transaksi</h2><div class="toolbar no-print"><input id="historySearch" placeholder="Cari nama atau alat..." oninput="renderHistory()"><button class="secondary" onclick="window.print()">Cetak laporan</button></div></div>
+<div class="tablewrap"><table><thead><tr><th>Peminjam</th><th>Alat</th><th>Jumlah</th><th>Tgl pinjam</th><th>Tgl kembali</th><th>Status</th></tr></thead><tbody id="historyBody"></tbody></table></div></div>
+</section>
+<footer>LabTI Demo • Prototype berdasarkan studi kasus pada dokumen ANALISIS KASUS.docx</footer>
+</main></div>
+<div id="modal" class="modal hidden"><div class="dialog"><div id="modalContent"></div></div></div>
+<script>
+const today=()=>new Date().toISOString().slice(0,10);
+let tools=JSON.parse(localStorage.getItem('labti_tools')||'null')||[
+ {id:1,code:'ALT-001',name:'Multimeter digital',total:8},
+ {id:2,code:'ALT-002',name:'Tang crimping',total:12},
+ {id:3,code:'ALT-003',name:'Laptop',total:10},
+ {id:4,code:'ALT-004',name:'Kabel LAN tester',total:5}
+];
+let loans=JSON.parse(localStorage.getItem('labti_loans')||'null')||[
+ {id:1,borrower:'Andi Pratama',toolId:1,qty:1,start:today(),due:shiftDate(today(),-2),returned:null},
+ {id:2,borrower:'Siti Rahma',toolId:3,qty:2,start:today(),due:shiftDate(today(),3),returned:null}
+];
+function shiftDate(d,n){let x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)}
+function save(){localStorage.setItem('labti_tools',JSON.stringify(tools));localStorage.setItem('labti_loans',JSON.stringify(loans));render()}
+function tool(id){return tools.find(t=>t.id===Number(id))}
+function activeFor(id){return loans.filter(l=>l.toolId===Number(id)&&!l.returned).reduce((a,l)=>a+l.qty,0)}
+function status(l){return l.returned?'Dikembalikan':l.due<today()?'Terlambat':'Dipinjam'}
+function badge(s){return `<span class="tag ${s==='Terlambat'?'bad':s==='Dikembalikan'?'ok':'warn'}">${s}</span>`}
+function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(page).classList.remove('hidden');document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===page));render()}
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>go(b.dataset.page));
+function render(){renderStats();renderTools();renderLoans();renderHistory();renderAttention()}
+function renderStats(){document.getElementById('s-total').textContent=tools.length;document.getElementById('s-ready').textContent=tools.reduce((a,t)=>a+t.total-activeFor(t.id),0);document.getElementById('s-loan').textContent=loans.filter(l=>!l.returned).reduce((a,l)=>a+l.qty,0);document.getElementById('s-late').textContent=loans.filter(l=>!l.returned&&l.due<today()).length}
+function renderTools(){let q=(document.getElementById('toolSearch')?.value||'').toLowerCase();let rows=tools.filter(t=>(t.name+' '+t.code).toLowerCase().includes(q));document.getElementById('toolsBody').innerHTML=rows.map(t=>`<tr><td><b>${t.code}</b></td><td>${t.name}</td><td>${t.total}</td><td>${t.total-activeFor(t.id)}</td><td>${activeFor(t.id)}</td><td><div class="actions"><button class="secondary" onclick="openTool(${t.id})">Edit</button><button class="danger" onclick="deleteTool(${t.id})">Hapus</button></div></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Belum ada data alat.</td></tr>'}
+function renderLoans(){let q=(document.getElementById('loanSearch')?.value||'').toLowerCase();let rows=loans.filter(l=>!l.returned&&(l.borrower+' '+(tool(l.toolId)?.name||'')).toLowerCase().includes(q));document.getElementById('loansBody').innerHTML=rows.map(l=>`<tr><td>${esc(l.borrower)}</td><td>${tool(l.toolId)?.name||'Alat dihapus'}</td><td>${l.qty}</td><td>${l.start}</td><td>${l.due}</td><td>${badge(status(l))}</td><td><button onclick="returnLoan(${l.id})">Kembalikan</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Tidak ada peminjaman aktif.</td></tr>'}
+function renderHistory(){let q=(document.getElementById('historySearch')?.value||'').toLowerCase();let rows=loans.filter(l=>(l.borrower+' '+(tool(l.toolId)?.name||'')).toLowerCase().includes(q));document.getElementById('historyBody').innerHTML=rows.slice().reverse().map(l=>`<tr><td>${esc(l.borrower)}</td><td>${tool(l.toolId)?.name||'Alat dihapus'}</td><td>${l.qty}</td><td>${l.start}</td><td>${l.returned||'—'}</td><td>${badge(status(l))}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">Belum ada transaksi.</td></tr>'}
+function renderAttention(){let rows=loans.filter(l=>!l.returned&&l.due<today());document.getElementById('attention').innerHTML=rows.map(l=>`<tr><td>${esc(l.borrower)}</td><td>${tool(l.toolId)?.name||'Alat dihapus'}</td><td>${l.due}</td><td>${badge('Terlambat')}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">Tidak ada pengembalian terlambat.</td></tr>'}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function show(content){document.getElementById('modalContent').innerHTML=content;document.getElementById('modal').classList.remove('hidden')}
+function close(){document.getElementById('modal').classList.add('hidden')}
+function openTool(id){let t=id?tool(id):{code:'',name:'',total:1};show(`<h2>${id?'Edit alat':'Tambah alat'}</h2><form id="toolForm"><div class="field"><label>Kode alat</label><input name="code" required value="${esc(t.code)}" placeholder="ALT-005"></div><div class="field"><label>Nama alat</label><input name="name" required value="${esc(t.name)}" placeholder="Contoh: Obeng set"></div><div class="field"><label>Total unit</label><input name="total" type="number" min="${id?activeFor(id):1}" required value="${t.total}"></div><div class="dialogfoot"><button type="button" class="secondary" onclick="close()">Batal</button><button>Simpan</button></div></form>`);document.getElementById('toolForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),code=f.get('code').trim();if(tools.some(x=>x.code.toLowerCase()===code.toLowerCase()&&x.id!==id)){alert('Kode alat sudah digunakan.');return}let data={id:id||Date.now(),code,name:f.get('name').trim(),total:Number(f.get('total'))};if(id)tools=tools.map(x=>x.id===id?data:x);else tools.push(data);close();save()}}
+function deleteTool(id){if(activeFor(id)){alert('Alat masih dipinjam dan tidak dapat dihapus.');return}if(confirm('Hapus alat ini?')){tools=tools.filter(t=>t.id!==id);save()}}
+function openLoan(){if(!tools.some(t=>t.total-activeFor(t.id)>0)){alert('Tidak ada unit alat yang tersedia.');return}show(`<h2>Catat peminjaman</h2><form id="loanForm"><div class="field"><label>Nama peminjam</label><input name="borrower" required placeholder="Nama lengkap"></div><div class="field"><label>Alat</label><select name="toolId">${tools.filter(t=>t.total-activeFor(t.id)>0).map(t=>`<option value="${t.id}">${esc(t.name)} — tersedia ${t.total-activeFor(t.id)}</option>`).join('')}</select></div><div class="formgrid"><div class="field"><label>Jumlah unit</label><input name="qty" type="number" min="1" value="1" required></div><div class="field"><label>Tanggal pinjam</label><input name="start" type="date" value="${today()}" required></div></div><div class="field"><label>Batas pengembalian</label><input name="due" type="date" min="${today()}" value="${shiftDate(today(),7)}" required></div><div class="dialogfoot"><button type="button" class="secondary" onclick="close()">Batal</button><button>Simpan transaksi</button></div></form>`);document.getElementById('loanForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),id=Number(f.get('toolId')),qty=Number(f.get('qty')),t=tool(id);if(qty<1||qty>t.total-activeFor(id)){alert('Jumlah melebihi stok yang tersedia.');return}if(f.get('due')<f.get('start')){alert('Tanggal kembali tidak boleh sebelum tanggal pinjam.');return}loans.push({id:Date.now(),borrower:f.get('borrower').trim(),toolId:id,qty,start:f.get('start'),due:f.get('due'),returned:null});close();save()}}
+function returnLoan(id){if(confirm('Konfirmasi alat sudah dikembalikan?')){let l=loans.find(x=>x.id===id);l.returned=today();save()}}
+render();
+</script>
+</body></html>
